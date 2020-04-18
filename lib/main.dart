@@ -1,4 +1,6 @@
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:math_expressions/math_expressions.dart';
 
 void main() {
   runApp(MyApp());
@@ -43,7 +45,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         padding: EdgeInsets.all(16),
-        onPressed: null,
+        onPressed: () => buttonPressed(buttonText),
+        onLongPress: () => buttonLongPressed(buttonText),
         child: Text(
           buttonText,
           style: TextStyle(
@@ -53,75 +56,57 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  String output = "0";
-  String _output = "0";
-  double num1 = 0.0;
-  double num2 = 0.0;
-  String operand = "";
+  String equation = "0";
+  String result = "0";
+  String expression = "";
+  double equationFontSize = 38.0;
+  double resultFontSize = 48.0;
+
   buttonPressed(String buttonText) {
-    if (buttonText == "<") {
-      _output = "0";
-      num1 = 0.0;
-      num2 = 0.0;
-      operand = "";
-    } else if (buttonText == "+" ||
-        buttonText == "-" ||
-        buttonText == "x" ||
-        buttonText == "/" ||
-        buttonText == "%") {
-      num1 = double.parse(output);
-      operand = buttonText;
-      _output = "0";
-    } else if (buttonText == ".") {
-      if (_output.contains(".")) {
-        print("Already contains a decimal");
-        return;
-      } else {
-        _output = _output + buttonText;
-      }
-    } else if (buttonText == "Ent") {
-      num2 = double.parse(_output);
-      if (operand == "+") {
-        _output = (num1 + num2).toString();
-      }
-      if (operand == "-") {
-        _output = (num1 - num2).toString();
-      }
-      if (operand == "x") {
-        _output = (num1 * num2).toString();
-      }
-      if (operand == "/") {
-        _output = (num1 / num2).toString();
-      }
-      if (operand == "%") {
-        _output = (num1 % num2).toString();
-      }
-      num1 = 0.0;
-      num2 = 0.0;
-      operand = "";
-    } else {
-      _output = _output + buttonText;
-    }
-    print(_output);
+    print(buttonText);
     setState(() {
-      output = double.parse(_output).toStringAsFixed(2);
+      if (buttonText == "Del") {
+        equationFontSize = 48.0;
+        resultFontSize = 38.0;
+        equation = equation.substring(0, equation.length - 1);
+        if (equation == "") {
+          equation = "0";
+        }
+      } else if (buttonText == "Enter") {
+        equationFontSize = 38.0;
+        resultFontSize = 48.0;
+        expression = equation;
+        expression = expression.replaceAll('x', '*');
+        try {
+          Parser p = new Parser();
+          Expression exp = p.parse(expression);
+          ContextModel cm = ContextModel();
+          result = "${exp.evaluate(EvaluationType.REAL, cm)}";
+        } catch (e) {
+          result = "Error";
+        }
+      } else {
+        equationFontSize = 48.0;
+        resultFontSize = 38.0;
+        if (equation == "0") {
+          equation = buttonText;
+        } else {
+          equation += buttonText;
+        }
+      }
     });
   }
 
-  Widget builButton(String buttonText) {
-    return Expanded(
-      child: OutlineButton(
-        padding: EdgeInsets.all(24.0),
-        child: Text(
-          buttonText,
-          style: TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        onPressed: () => buttonPressed(buttonText),
-      ),
-    );
+  buttonLongPressed(String buttonText) {
+    print("long");
+    setState(() {
+      if (buttonText == "Del") {
+        equation = "0";
+        result = "0";
+        equationFontSize = 38.0;
+        resultFontSize = 48.0;
+      }
+    });
   }
 
   @override
@@ -137,10 +122,9 @@ class _MyHomePageState extends State<MyHomePage> {
               alignment: Alignment.centerRight,
               padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
               child: Text(
-                output,
+                equation,
                 style: new TextStyle(
-                  fontSize: 38,
-                  fontWeight: FontWeight.bold,
+                  fontSize: equationFontSize,
                 ),
               ),
             ),
@@ -148,10 +132,9 @@ class _MyHomePageState extends State<MyHomePage> {
               alignment: Alignment.centerRight,
               padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
               child: Text(
-                output,
+                result,
                 style: new TextStyle(
-                  fontSize: 48,
-                  fontWeight: FontWeight.bold,
+                  fontSize: resultFontSize,
                 ),
               ),
             ),
