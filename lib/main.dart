@@ -28,6 +28,31 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Widget buildButton(
+      String buttonText, double buttonHeight, Color buttonColor) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.1 * buttonHeight,
+      color: buttonColor,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0.0),
+          side: BorderSide(
+            color: Colors.white,
+            width: 1,
+            style: BorderStyle.solid,
+          ),
+        ),
+        padding: EdgeInsets.all(16),
+        onPressed: null,
+        child: Text(
+          buttonText,
+          style: TextStyle(
+              fontSize: 30, fontWeight: FontWeight.normal, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
   String output = "0";
   String _output = "0";
   double num1 = 0.0;
@@ -110,10 +135,18 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             Container(
               alignment: Alignment.centerRight,
-              padding: new EdgeInsets.symmetric(
-                vertical: 24.0,
-                horizontal: 12.0,
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+              child: Text(
+                output,
+                style: new TextStyle(
+                  fontSize: 38,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
+            ),
+            Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
               child: Text(
                 output,
                 style: new TextStyle(
@@ -125,43 +158,97 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               child: Divider(),
             ),
-            Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    builButton("7"),
-                    builButton("8"),
-                    builButton("9"),
-                    builButton("/"),
-                    builButton("x"),
-                  ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.60,
+                  child: Table(
+                    children: [
+                      TableRow(
+                        children: [
+                          buildButton("7", 1, Colors.black54),
+                          buildButton("8", 1, Colors.black54),
+                          buildButton("9", 1, Colors.black54),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          buildButton("4", 1, Colors.black54),
+                          buildButton("5", 1, Colors.black54),
+                          buildButton("6", 1, Colors.black54),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          buildButton("1", 1, Colors.black54),
+                          buildButton("2", 1, Colors.black54),
+                          buildButton("3", 1, Colors.black54),
+                        ],
+                      ),
+                      TableRow(
+                        children: [
+                          buildButton("0", 1, Colors.black54),
+                          buildButton(".", 1, Colors.black54),
+                          buildButton("Del", 1, Colors.black54),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-                Row(
-                  children: <Widget>[
-                    builButton("4"),
-                    builButton("5"),
-                    builButton("6"),
-                    builButton("+"),
-                    builButton("-"),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    builButton("1"),
-                    builButton("2"),
-                    builButton("3"),
-                    builButton("xx"),
-                    builButton("%"),
-                  ],
-                ),
-                Row(
-                  children: <Widget>[
-                    builButton("0"),
-                    builButton("."),
-                    builButton("<"),
-                    builButton("Ent"),
-                    builButton("xx"),
-                  ],
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.40,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.20,
+                            child: Table(
+                              children: [
+                                TableRow(children: [
+                                  buildButton("/", 1, Colors.redAccent),
+                                ]),
+                                TableRow(children: [
+                                  buildButton("+", 2, Colors.redAccent),
+                                ]),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.20,
+                            child: Table(
+                              children: [
+                                TableRow(children: [
+                                  buildButton("x", 1, Colors.redAccent),
+                                ]),
+                                TableRow(children: [
+                                  buildButton("-", 1, Colors.redAccent),
+                                ]),
+                                TableRow(children: [
+                                  buildButton("%", 1, Colors.redAccent),
+                                ]),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.40,
+                            child: Table(
+                              children: [
+                                TableRow(children: [
+                                  buildButton("Enter", 1, Colors.redAccent),
+                                ]),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
