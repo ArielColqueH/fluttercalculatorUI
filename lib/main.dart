@@ -31,20 +31,22 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Widget buildButton(
-      String buttonText, double buttonHeight, Color buttonColor) {
+      String buttonText, double buttonHeight, Color buttonColor,double radio) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.1 * buttonHeight,
-      color: buttonColor,
+      //color: buttonColor,
       child: FlatButton(
+        color: buttonColor,
+        textColor: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0.0),
+          borderRadius: BorderRadius.circular(radio),
           side: BorderSide(
             color: Colors.white,
             width: 1,
             style: BorderStyle.solid,
           ),
         ),
-        padding: EdgeInsets.all(16),
+        padding: EdgeInsets.all(20),
         onPressed: () => buttonPressed(buttonText),
         onLongPress: () => buttonLongPressed(buttonText),
         child: Text(
@@ -68,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> {
   buttonPressed(String buttonText) {
     print(buttonText);
     setState(() {
-      if (buttonText == "Del") {
+      if (buttonText == "⌫") {
         equationFontSize = 48.0;
         resultFontSize = 38.0;
         equation = equation.substring(0, equation.length - 1);
@@ -100,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
               buttonText != "+" &&
               buttonText != "-" &&
               buttonText != "x" &&
-              buttonText != "/" &&
+              buttonText != "÷" &&
               buttonText != "%") {
             equation = "";
             equation += buttonText;
@@ -122,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
             equation += buttonText;
             expression = equation;
             expression = expression.replaceAll('x', '*');
+            expression = expression.replaceAll('÷', '/');
             //verificarPrimero = true;
             primerIngreso = false;
             try {
@@ -143,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
   buttonLongPressed(String buttonText) {
     print("long");
     setState(() {
-      if (buttonText == "Del") {
+      if (buttonText == "⌫") {
         equation = "";
         result = "";
         equationFontSize = 38.0;
@@ -157,15 +160,18 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xfff7f7f7),
       appBar: AppBar(
+        backgroundColor: Color(0xff95389e),
         title: Text(widget.title),
       ),
       body: Container(
+        //padding: EdgeInsets.all(10),
         child: new Column(
           children: [
             Container(
               alignment: Alignment.centerRight,
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+              padding: EdgeInsets.all(20),
               child: Text(
                 equation,
                 style: new TextStyle(
@@ -175,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Container(
               alignment: Alignment.centerRight,
-              padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+              padding: EdgeInsets.all(20),
               child: Text(
                 result,
                 style: new TextStyle(
@@ -195,8 +201,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       TableRow(
                         children: [
-                          buildButton("(", 1, Colors.black54),
-                          buildButton(")", 1, Colors.black54),
+                          buildButton("(", 1, Color(0xff43d8c9),50),
+                          buildButton(")", 1, Color(0xff43d8c9),50),
                         ],
                       ),
                     ],
@@ -213,30 +219,30 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: [
                       TableRow(
                         children: [
-                          buildButton("7", 1, Colors.black54),
-                          buildButton("8", 1, Colors.black54),
-                          buildButton("9", 1, Colors.black54),
+                          buildButton("7", 1, Color(0xff95389e),50),
+                          buildButton("8", 1, Color(0xff95389e),50),
+                          buildButton("9", 1, Color(0xff95389e),50),
                         ],
                       ),
                       TableRow(
                         children: [
-                          buildButton("4", 1, Colors.black54),
-                          buildButton("5", 1, Colors.black54),
-                          buildButton("6", 1, Colors.black54),
+                          buildButton("4", 1, Color(0xff95389e),50),
+                          buildButton("5", 1, Color(0xff95389e),50),
+                          buildButton("6", 1, Color(0xff95389e),50),
                         ],
                       ),
                       TableRow(
                         children: [
-                          buildButton("1", 1, Colors.black54),
-                          buildButton("2", 1, Colors.black54),
-                          buildButton("3", 1, Colors.black54),
+                          buildButton("1", 1, Color(0xff95389e),50),
+                          buildButton("2", 1, Color(0xff95389e),50),
+                          buildButton("3", 1, Color(0xff95389e),50),
                         ],
                       ),
                       TableRow(
                         children: [
-                          buildButton("0", 1, Colors.black54),
-                          buildButton(".", 1, Colors.black54),
-                          buildButton("Del", 1, Colors.black54),
+                          buildButton("0", 1, Color(0xff95389e),50),
+                          buildButton(".", 1, Color(0xff95389e),50),
+                          buildButton("⌫", 1, Color(0xff95389e),50),
                         ],
                       ),
                     ],
@@ -253,10 +259,10 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Table(
                               children: [
                                 TableRow(children: [
-                                  buildButton("/", 1, Colors.redAccent),
+                                  buildButton("÷", 1, Color(0xff43d8c9),50),
                                 ]),
                                 TableRow(children: [
-                                  buildButton("+", 2, Colors.redAccent),
+                                  buildButton("+", 2, Color(0xff43d8c9),50),
                                 ]),
                               ],
                             ),
@@ -266,13 +272,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Table(
                               children: [
                                 TableRow(children: [
-                                  buildButton("x", 1, Colors.redAccent),
+                                  buildButton("x", 1, Color(0xff43d8c9),50),
                                 ]),
                                 TableRow(children: [
-                                  buildButton("-", 1, Colors.redAccent),
+                                  buildButton("-", 1, Color(0xff43d8c9),50),
                                 ]),
                                 TableRow(children: [
-                                  buildButton("%", 1, Colors.redAccent),
+                                  buildButton("%", 1, Color(0xff43d8c9),50),
                                 ]),
                               ],
                             ),
@@ -286,7 +292,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Table(
                               children: [
                                 TableRow(children: [
-                                  buildButton("Enter", 1, Colors.redAccent),
+                                  buildButton("Enter", 1, Color(0xff43d8c9),50),
                                 ]),
                               ],
                             ),
