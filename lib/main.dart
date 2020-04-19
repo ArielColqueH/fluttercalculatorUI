@@ -56,11 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  String equation = "0";
-  String result = "0";
+  String equation = "";
+  String result = "";
   String expression = "";
+  double aux = 0;
   double equationFontSize = 38.0;
   double resultFontSize = 48.0;
+  bool primerIngreso = false;
+  //bool verificarPrimero = true;
 
   buttonPressed(String buttonText) {
     print(buttonText);
@@ -70,28 +73,68 @@ class _MyHomePageState extends State<MyHomePage> {
         resultFontSize = 38.0;
         equation = equation.substring(0, equation.length - 1);
         if (equation == "") {
-          equation = "0";
+          equation = "";
         }
       } else if (buttonText == "Enter") {
-        equationFontSize = 38.0;
-        resultFontSize = 48.0;
-        expression = equation;
-        expression = expression.replaceAll('x', '*');
-        try {
-          Parser p = new Parser();
-          Expression exp = p.parse(expression);
-          ContextModel cm = ContextModel();
-          result = "${exp.evaluate(EvaluationType.REAL, cm)}";
-        } catch (e) {
-          result = "Error";
-        }
-      } else {
         equationFontSize = 48.0;
         resultFontSize = 38.0;
-        if (equation == "0") {
+        if (result == "") {
+          //equation = result;
+        } else if (result == "Error" || result == "Infinity") {
+          //print("here");
+          equation = "";
+          result = "";
+        } else {
+          equation = result;
+          result = "";
+        }
+        primerIngreso = true;
+        //flag2 = true;
+      } else {
+        equationFontSize = 38.0;
+        resultFontSize = 48.0;
+        if (equation == "") {
           equation = buttonText;
         } else {
-          equation += buttonText;
+          if (primerIngreso &&
+              buttonText != "+" &&
+              buttonText != "-" &&
+              buttonText != "x" &&
+              buttonText != "/" &&
+              buttonText != "%") {
+            equation = "";
+            equation += buttonText;
+            expression = equation;
+            expression = expression.replaceAll('x', '*');
+            primerIngreso = false;
+            //verificarPrimero = false;
+            try {
+              Parser p = new Parser();
+              Expression exp = p.parse(expression);
+              ContextModel cm = ContextModel();
+              result = "${exp.evaluate(EvaluationType.REAL, cm)}";
+              aux = double.parse(result);
+              result = aux.toStringAsFixed(2);
+            } catch (e) {
+              result = "Error";
+            }
+          } else {
+            equation += buttonText;
+            expression = equation;
+            expression = expression.replaceAll('x', '*');
+            //verificarPrimero = true;
+            primerIngreso = false;
+            try {
+              Parser p = new Parser();
+              Expression exp = p.parse(expression);
+              ContextModel cm = ContextModel();
+              result = "${exp.evaluate(EvaluationType.REAL, cm)}";
+              aux = double.parse(result);
+              result = aux.toStringAsFixed(2);
+            } catch (e) {
+              result = "Error";
+            }
+          }
         }
       }
     });
@@ -101,10 +144,12 @@ class _MyHomePageState extends State<MyHomePage> {
     print("long");
     setState(() {
       if (buttonText == "Del") {
-        equation = "0";
-        result = "0";
+        equation = "";
+        result = "";
         equationFontSize = 38.0;
         resultFontSize = 48.0;
+        primerIngreso = false;
+        //verificarPrimero = true;
       }
     });
   }
@@ -140,6 +185,24 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             Expanded(
               child: Divider(),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: Table(
+                    children: [
+                      TableRow(
+                        children: [
+                          buildButton("(", 1, Colors.black54),
+                          buildButton(")", 1, Colors.black54),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
